@@ -2,6 +2,7 @@ name: Deploy Helm Chart to Docker Desktop Kubernetes
 
 # Trigger the workflow on push to main or pull request to main
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
