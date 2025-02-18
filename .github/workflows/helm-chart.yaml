@@ -12,7 +12,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Use a GitHub-hosted Ubuntu runner
+    runs-on: self-hosted  # Use a GitHub-hosted Ubuntu runner
 
     steps:
     - name: Checkout the repository
