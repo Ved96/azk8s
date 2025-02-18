@@ -1,48 +1,38 @@
-name: Deploy Helm Chart to Docker Desktop Kubernetes
+name: Deploy to Kubernetes
 
-# Trigger the workflow on push to main or pull request to main
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   deploy:
-    runs-on: self-hosted  # Use a GitHub-hosted Ubuntu runner
+    runs-on: self-hosted  # Ensure you are using the self-hosted agent
 
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v3
 
-    - name: Set up Kubernetes and Helm
-      uses: azure/setup-kubectl@v1
-      with:
-        version: 'latest'
-
-    - uses: azure/setup-helm@v4.3.0
-      with:
-        version: '3.13.3' # default is latest (stable)
-      id: install
+    - name: Verify Helm is available
+      run: helm version  # Make sure Helm is installed and accessible
 
     - name: Set up Kubernetes config from GitHub Secret
       run: |
-        mkdir -p ~/.kube  
-        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+        mkdir -p ~/.kube  # Create the kube directory if it doesn't exist
+        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config  # Set Kubeconfig from GitHub secret
 
-    - name: Verify Kubernetes Cluster
+    - name: Verify Kubernetes connection
       run: |
-        kubectl cluster-info
+        kubectl cluster-info  # Verify that kubectl can connect to the cluster
 
     - name: Install Helm Chart
       run: |
-        helm repo add stable https://charts.helm.sh/stable
-        helm repo update
-        helm install k8sapp ./k8-app  # Replace with your chart path
+        helm repo add stable https://charts.helm.sh/stable  # Add Helm repo (if required)
+        helm repo update  # Update the Helm repositories
+        helm install myapp ./k8-app  # Path to the chart is './k8-app'
 
     - name: Wait for Kubernetes Pods to be ready
       run: |
-        kubectl rollout status deployment/myapp
+        kubectl rollout status deployment/myapp  # Replace 'myapp' with your deployment name
+
