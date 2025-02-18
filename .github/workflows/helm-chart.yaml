@@ -23,10 +23,10 @@ jobs:
       with:
         version: 'latest'
 
-    - uses: azure/setup-helm@v4.3.0
+    - name: Set up Helm
+      uses: azure/setup-helm@v4.2.0
       with:
-       version: 'latest' # default is latest (stable)
-       id: install
+        version: v3.17.0
 
     - name: Set up Kubernetes config from GitHub Secret
       run: |
