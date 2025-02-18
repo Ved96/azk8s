@@ -34,5 +34,19 @@ jobs:
 
     - name: Wait for Kubernetes Pods to be ready
       run: |
-        kubectl rollout status deployment/myapp  # Replace 'myapp' with your deployment name
+        kubectl rollout status deployment/redis-leader  # Replace 'myapp' with your deployment name
+   
+    - name: Forward traffic to the frontend service
+      run: |
+        kubectl port-forward svc/frontend 8080:80 &  # Run port-forwarding in the background
+        sleep 5  # Allow some time for the port-forward to establish
+        curl http://localhost:8080  # 
 
+    - name: Wait for 30 seconds and check if service is accessible
+      run: |
+        sleep 30  # Wait for 30 seconds
+        curl http://localhost:8080 || exit 1  # Check if the service is still accessible, exit if not
+        
+    - name: Delete Helm Chart after 30 seconds
+      run: |
+        helm uninstall myapp  # Delete the Helm chart after confirming accessibility    
