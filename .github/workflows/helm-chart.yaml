@@ -30,6 +30,7 @@ jobs:
 
     - name: Set up Kubernetes config from GitHub Secret
       run: |
+        mkdir -p ~/.kube  
         echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
 
     - name: Verify Kubernetes Cluster
