@@ -2,12 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
 spec:
-  selector:
-    app: frontend  # Make sure the selector matches your pod labels
+  type: NodePort  # Change to NodePort
   ports:
-    - protocol: TCP
-      port: 80  # Internal port for the service
-      targetPort: 80  # Port inside the container
-      nodePort: 30080  # Exposed port on the node
-  type: NodePort  # Make the service accessible on a node's IP
+    - port: 80
+      targetPort: 80
+      nodePort: 30080  # Specify a NodePort (e.g., 30080)
+  selector:
+    app: guestbook
+    tier: frontend
