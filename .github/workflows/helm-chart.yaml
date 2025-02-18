@@ -38,9 +38,11 @@ jobs:
    
     - name: Forward traffic to the frontend service
       run: |
-        kubectl port-forward svc/frontend 8080:80 &  # Run port-forwarding in the background
+        Start-Process kubectl -ArgumentList "port-forward", "svc/frontend", "8080:80" # Run port-forwarding in the background
         sleep 5  # Allow some time for the port-forward to establish
-        curl http://localhost:8080  # 
+        curl http://localhost:8080  # Check if service is accessible
+        shell: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+
 
     - name: Wait for 30 seconds and check if service is accessible
       run: |
