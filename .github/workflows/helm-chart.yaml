@@ -38,4 +38,4 @@ jobs:
    
     - name: check helm deployment
       run: |
-        curl http://localhost:30080/ 
+        Invoke-WebRequest http://localhost:30080/ -UseBasicParsing
