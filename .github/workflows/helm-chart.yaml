@@ -19,7 +19,7 @@ jobs:
 
     - name: Set up Kubernetes config from GitHub Secret
       run: |
-        mkdir -p ~/.kube  # Create the kube directory if it doesn't exist
+        # mkdir -p ~/.kube  # Create the kube directory if it doesn't exist
         echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config  # Set Kubeconfig from GitHub secret
 
     - name: Verify Kubernetes connection
