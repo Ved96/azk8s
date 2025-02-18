@@ -36,6 +36,6 @@ jobs:
       run: |
         kubectl rollout status deployment/redis-leader  # Replace 'myapp' with your deployment name
    
-    - name: Delete Helm Chart after 30 seconds
+    - name: check helm deployment
       run: |
-        helm uninstall myapp  # Delete the Helm chart after confirming accessibility    
+        curl http://localhost:30080/ 
