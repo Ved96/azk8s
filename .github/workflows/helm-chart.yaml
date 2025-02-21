@@ -19,8 +19,19 @@ jobs:
 
     - name: Set up Kubernetes config from GitHub Secret
       run: |
-        # mkdir -p ~/.kube  # Create the kube directory if it doesn't exist
-        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config  # Set Kubeconfig from GitHub secret
+        # PowerShell script to ensure the kube directory is created and write the Kubeconfig
+        $homeDirectory = [System.Environment]::GetFolderPath('UserProfile')  # C:\Users\apurva
+        $kubeDirectory = Join-Path $homeDirectory '.kube'  # C:\Users\apurva\.kube
+
+        # Create the .kube directory if it doesn't exist
+        if (-not (Test-Path -Path $kubeDirectory)) {
+            New-Item -Path $kubeDirectory -ItemType Directory
+        }
+
+        # Set the Kubeconfig from GitHub Secret and save it to the correct path
+        $kubeConfig = "${{ secrets.KUBECONFIG }}"  # Assuming KUBECONFIG secret contains your kubeconfig
+        $kubeConfigPath = Join-Path $kubeDirectory 'config'  # C:\Users\apurva\.kube\config
+        Set-Content -Path $kubeConfigPath -Value $kubeConfig
 
     - name: Verify Kubernetes connection
       run: |
@@ -34,8 +45,8 @@ jobs:
 
     - name: Wait for Kubernetes Pods to be ready
       run: |
-        kubectl rollout status deployment/redis-leader  # Replace 'myapp' with your deployment name
-   
-    - name: check helm deployment
+        kubectl rollout status deployment/redis-leader  # Replace 'redis-leader' with your deployment name
+
+    - name: Check helm deployment
       run: |
-        Invoke-WebRequest http://localhost:30080/ -UseBasicParsing
+        Invoke-WebRequest http://localhost:30080/ -UseBasicParsing  # Check if the service is running correctly
