@@ -7,12 +7,9 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: self-hosted  # Ensure you are using the self-hosted agent
-
-    steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v3  
+  sonar-scan:
+    runs-on: ubuntu-latest
+    steps: 
     - name: sonar
       uses: actions/checkout@v4
       with:
@@ -21,7 +18,13 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@v4
       env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  deploy:
+    runs-on: self-hosted  # Ensure you are using the self-hosted agent
 
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3 
+      
     - name: Verify Helm is available
       run: helm version  # Make sure Helm is installed and accessible
 
