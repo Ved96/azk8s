@@ -7,23 +7,20 @@ on:
       - main
 
 jobs:
-  sonarqube:
-    name: SonarQube
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v4
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   deploy:
     runs-on: self-hosted  # Ensure you are using the self-hosted agent
 
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v3  
+    - name: sonar
+      uses: actions/checkout@v4
+      with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v4
+      env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Verify Helm is available
       run: helm version  # Make sure Helm is installed and accessible
